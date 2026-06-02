@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Threat Intelligence Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <div id="spinner-overlay" class="spinner-overlay hidden">
+    <div class="spinner-ring"></div>
+    <div class="spinner-text">Loading data...</div>
+  </div>
+
+  <div id="alert-banner" class="alert-banner hidden">
+    <span id="alert-text">⚠️ Active critical threats detected</span>
+    <button onclick="document.getElementById('alert-banner').classList.add('hidden')" class="alert-close">✕</button>
+  </div>
+
+  <header class="header">
+    <div class="header-left">
+      <span class="logo">🛡️ CTID</span>
+      <span class="logo-full">Cyber Threat Intelligence Dashboard</span>
+    </div>
+    <div class="header-right">
+      <span id="last-updated" class="last-updated">Updated: —</span>
+      <span class="live-badge"><span class="dot"></span> LIVE</span>
+      <button class="icon-btn" id="alert-bell" onclick="toggleAlerts()" title="Active Alerts">
+        🔔 <span id="alert-count" class="alert-count hidden">0</span>
+      </button>
+      <button class="icon-btn" id="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+      <span class="user-pill">👤 {{ user }} <span class="role-tag">{{ role }}</span></span>
+      {% if role == 'admin' %}
+      <a href="/admin" class="btn-nav">⚙️ Admin</a>
+      {% endif %}
+      <a href="/about" class="btn-nav">About</a>
+      <a href="/logout" class="btn-logout">Logout</a>
+    </div>
+  </header>
+
+  <div id="alert-panel" class="alert-panel hidden">
+    <div class="alert-panel-title">🚨 Active Critical Alerts</div>
+    <div id="alert-list"><div style="color:var(--text-dim);padding:12px;text-align:center">Loading...</div></div>
+  </div>
+
+  <nav class="tab-nav">
+    <button class="tab-btn active" onclick="showTab('overview', this)">📊 Overview</button>
+    <button class="tab-btn"        onclick="showTab('map', this)">🌍 World Map</button>
+    <button class="tab-btn"        onclick="showTab('incidents', this)">📋 Incidents</button>
+  </nav>
+
+  <div class="filter-bar">
+    <span class="filter-label">🔍 Filters:</span>
+    <select id="f-attack"   class="filter-select" onchange="applyFilters()"><option value="">All Attack Types</option></select>
+    <select id="f-sector"   class="filter-select" onchange="applyFilters()"><option value="">All Sectors</option></select>
+    <select id="f-severity" class="filter-select" onchange="applyFilters()"><option value="">All Severities</option></select>
+    <select id="f-country"  class="filter-select" onchange="applyFilters()"><option value="">All Countries</option></select>
+    <select id="f-year"     class="filter-select" onchange="applyFilters()"><option value="">All Years</option></select>
+    <select id="f-month"    class="filter-select" onchange="applyFilters()"><option value="">All Months</option></select>
+    <button class="btn-reset" onclick="resetFilters()">✕ Reset</button>
+  </div>
+
+  
+  <div id="tab-overview" class="tab-content">
+    <div class="stat-row">
+      <div class="stat-card" style="--accent:#f43f5e">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-label">Total Threats</div>
+        <div class="stat-value" id="s-total">—</div>
+        <div class="stat-sub">incidents recorded</div>
+      </div>
+      <div class="stat-card" style="--accent:#f97316">
+        <div class="stat-icon">🛡️</div>
+        <div class="stat-label">Blocked Attacks</div>
+        <div class="stat-value" id="s-blocked">—</div>
+        <div class="stat-sub">successfully stopped</div>
+      </div>
+      <div class="stat-card" style="--accent:#00e5ff">
+        <div class="stat-icon">📊</div>
+        <div class="stat-label">Block Rate</div>
+        <div class="stat-value" id="s-rate">—</div>
+        <div class="stat-sub">of all attacks blocked</div>
+      </div>
+      <div class="stat-card" style="--accent:#f43f5e">
+        <div class="stat-icon">💥</div>
+        <div class="stat-label">Data Breaches</div>
+        <div class="stat-value" id="s-breaches">—</div>
+        <div class="stat-sub">confirmed exfiltrations</div>
+      </div>
+      <div class="stat-card" style="--accent:#a855f7">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-label">Avg Duration</div>
+        <div class="stat-value" id="s-duration">—</div>
+        <div class="stat-sub">average attack length</div>
+      </div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="chart-title">⚡ Attack Types Distribution</div>
+        <canvas id="chartAttack" height="200"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">📈 Monthly Threat Trend</div>
+        <canvas id="chartTrend" height="200"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="chart-title">🌐 Top Source Countries</div>
+        <canvas id="chartCountry" height="240"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">🏢 Most Targeted Sectors</div>
+        <canvas id="chartSector" height="240"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="chart-title">🔴 Severity Breakdown</div>
+        <canvas id="chartSeverity" height="200"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">🛡️ Attack Status Overview</div>
+        <canvas id="chartStatus" height="200"></canvas>
+      </div>
+    </div>
+
+    <div class="recent-section">
+      <div class="recent-header">
+        <div class="recent-title">🕐 10 Most Recent Incidents</div>
+        <button class="btn-view-all" onclick="viewAllIncidents()">View All Incidents →</button>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="recent-table">
+          <thead>
+            <tr><th>#</th><th>Incident ID</th><th>Date</th><th>Attack Type</th><th>Countries</th><th>Sector</th><th>Status</th></tr>
+          </thead>
+          <tbody id="recent-tbody">
+            <tr><td colspan="7" style="text-align:center;color:var(--text-dim);padding:16px">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  
+  <div id="tab-map" class="tab-content hidden">
+    <div class="chart-card" style="margin:16px 24px 0">
+      <div class="chart-title">🌍 Global Attack Origin Map</div>
+      <div class="map-legend-bar">
+        <span style="color:var(--text-muted);font-size:11px">Threat Level:</span>
+        <span class="map-leg"><span style="background:#f43f5e"></span> High</span>
+        <span class="map-leg"><span style="background:#f97316"></span> Medium-High</span>
+        <span class="map-leg"><span style="background:#fbbf24"></span> Medium</span>
+        <span class="map-leg"><span style="background:#10b981"></span> Low</span>
+        <span style="font-size:11px;color:var(--text-muted)">· Click a circle for details</span>
+      </div>
+      <div id="leaflet-map" style="height:420px;border-radius:10px;overflow:hidden;border:1px solid var(--border)"></div>
+    </div>
+    <div class="chart-grid" style="margin-top:14px">
+      <div class="chart-card">
+        <div class="chart-title">🚀 Top Attack Origins</div>
+        <canvas id="chartSrcBar" height="220"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">🎯 Most Targeted Countries</div>
+        <canvas id="chartTgtBar" height="220"></canvas>
+      </div>
+    </div>
+  </div>
+
+  
+  <div id="tab-incidents" class="tab-content hidden">
+    <div class="chart-card table-card">
+      <div class="table-header-row">
+        <div class="chart-title" style="margin:0;border:none;padding:0">📋 All Incidents</div>
+        <div class="search-wrap">
+          <input type="text" id="table-search" class="search-input"
+                 placeholder="Search by ID, country, sector..."
+                 oninput="searchTable(this.value)">
+          <button class="btn-export" onclick="exportCSV()">⬇ Export CSV</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table id="incident-table">
+          <thead>
+            <tr>
+              <th>#</th><th>ID</th><th>Date</th><th>Attack Type</th>
+              <th>Source Country</th><th>Target Country</th><th>Sector</th>
+              <th>Duration (min)</th><th>Data Breach</th><th>Severity</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="table-body">
+            <tr><td colspan="11" style="text-align:center;color:var(--text-dim);padding:20px">Loading incidents...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <button class="pg-btn" id="pg-prev" onclick="changePage(-1)">← Prev</button>
+        <span id="pg-info" style="color:var(--text-muted);font-size:12px">Page 1</span>
+        <button class="pg-btn" id="pg-next" onclick="changePage(1)">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    🛡️ Cyber Threat Intelligence Dashboard &nbsp;|&nbsp;
+    <span style="opacity:.5">Built with Python · Flask · SQLite · Chart.js · Leaflet.js</span>
+  </footer>
+
+  <script src="/static/js/charts.js"></script>
+</body>
+</html>

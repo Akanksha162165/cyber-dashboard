@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — CTID</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    .admin-wrap { max-width: 900px; margin: 30px auto; padding: 0 24px; }
+    .admin-header { margin-bottom: 28px; }
+    .admin-header h1 { font-size: 20px; color: var(--accent); font-weight: 800; letter-spacing: 2px; }
+    .admin-header p  { color: var(--text-muted); font-size: 12px; margin-top: 4px; }
+    .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .admin-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 22px;
+    }
+    .admin-card-title {
+      font-size: 11px; color: var(--accent2);
+      text-transform: uppercase; letter-spacing: 1.5px;
+      margin-bottom: 18px; padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .admin-card-title::before {
+      content: ''; width: 3px; height: 14px;
+      background: linear-gradient(to bottom, var(--accent), var(--accent2));
+      border-radius: 2px; flex-shrink: 0;
+    }
+    .stat-mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .stat-mini {
+      background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 8px; padding: 12px 14px;
+    }
+    .stat-mini-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .stat-mini-value { font-size: 20px; font-weight: 800; color: var(--accent); }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+    .form-group input, .form-group select {
+      width: 100%; background: var(--bg-input); border: 1px solid var(--border);
+      color: var(--text-main); padding: 9px 12px; border-radius: 7px;
+      font-size: 13px; font-family: inherit; outline: none; transition: border-color .2s;
+    }
+    .form-group input:focus, .form-group select:focus { border-color: var(--accent); }
+    .btn-add {
+      width: 100%; padding: 11px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      color: #060a14; border: none; border-radius: 8px;
+      font-size: 12px; font-weight: 800; cursor: pointer;
+      letter-spacing: 1px; text-transform: uppercase;
+      transition: opacity .2s, transform .15s; font-family: inherit;
+    }
+    .btn-add:hover { opacity: .9; transform: translateY(-1px); }
+    .users-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 4px; }
+    .users-table th {
+      background: var(--bg-input); color: var(--text-muted);
+      text-transform: uppercase; font-size: 10px; letter-spacing: 1px;
+      padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border);
+    }
+    .users-table td { padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,.04); }
+    .users-table tr:hover td { background: var(--bg-hover); }
+    .btn-del {
+      background: rgba(244,63,94,.12); border: 1px solid rgba(244,63,94,.3);
+      color: #f87171; padding: 3px 10px; border-radius: 4px;
+      font-size: 10px; cursor: pointer; font-family: inherit; transition: all .2s;
+    }
+    .btn-del:hover { background: var(--danger); color: #fff; }
+    .toast {
+      position: fixed; bottom: 24px; right: 24px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-left: 4px solid var(--success);
+      color: var(--text-main); padding: 12px 20px;
+      border-radius: 8px; font-size: 13px;
+      animation: toastIn .3s ease; z-index: 9999;
+    }
+    .toast.error { border-left-color: var(--danger); }
+    @keyframes toastIn { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:none} }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-left">
+      <span class="logo">🛡️ CTID</span>
+      <span class="logo-full">Admin Panel</span>
+    </div>
+    <div class="header-right">
+      <span class="user-pill">👤 {{ user }} <span class="role-tag">{{ role }}</span></span>
+      <a href="/" class="btn-nav">Dashboard</a>
+      <a href="/logout" class="btn-logout">Logout</a>
+    </div>
+  </header>
+
+  <div class="admin-wrap">
+    <div class="admin-header">
+      <h1>⚙️ ADMIN PANEL</h1>
+      <p>Manage users, view database statistics and system information</p>
+    </div>
+
+    <div class="admin-grid">
+
+      <!-- DB Stats -->
+      <div class="admin-card">
+        <div class="admin-card-title">📊 Database Statistics</div>
+        <div class="stat-mini-grid">
+          <div class="stat-mini"><div class="stat-mini-label">Total Incidents</div><div class="stat-mini-value" id="db-incidents">—</div></div>
+          <div class="stat-mini"><div class="stat-mini-label">Total Users</div><div class="stat-mini-value" id="db-users">—</div></div>
+          <div class="stat-mini"><div class="stat-mini-label">Attack Types</div><div class="stat-mini-value" id="db-types">—</div></div>
+          <div class="stat-mini"><div class="stat-mini-label">Countries</div><div class="stat-mini-value" id="db-countries">—</div></div>
+        </div>
+        <div style="margin-top:14px;padding:10px;background:var(--bg-input);border-radius:6px;font-size:11px;">
+          <div style="color:var(--text-muted);margin-bottom:4px">Date Range</div>
+          <div id="db-range" style="color:var(--text-main);font-family:monospace">—</div>
+        </div>
+        <div style="margin-top:10px;padding:10px;background:var(--bg-input);border-radius:6px;font-size:11px;">
+          <div style="color:var(--text-muted);margin-bottom:4px">Database File</div>
+          <div id="db-path" style="color:var(--accent);font-family:monospace;word-break:break-all">—</div>
+        </div>
+      </div>
+
+      
+      <div class="admin-card">
+        <div class="admin-card-title">➕ Add New User</div>
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="new-username" placeholder="Enter username">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="new-password" placeholder="Min 6 characters">
+        </div>
+        <div class="form-group">
+          <label>Role</label>
+          <select id="new-role">
+            <option value="guest">Guest — Read only</option>
+            <option value="analyst">Analyst — Full access</option>
+            <option value="admin">Admin — Full + user management</option>
+          </select>
+        </div>
+        <button class="btn-add" onclick="addUser()">➕ Create User</button>
+      </div>
+
+      
+      <div class="admin-card" style="grid-column:1/-1">
+        <div class="admin-card-title">👥 All Users</div>
+        <table class="users-table">
+          <thead>
+            <tr><th>ID</th><th>Username</th><th>Role</th><th>Created</th><th>Action</th></tr>
+          </thead>
+          <tbody id="users-tbody">
+            <tr><td colspan="5" style="text-align:center;color:var(--text-dim);padding:16px">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    async function loadStats() {
+      const res  = await fetch('/api/db-stats');
+      const data = await res.json();
+      document.getElementById('db-incidents').textContent = data.total_incidents?.toLocaleString() || '—';
+      document.getElementById('db-users').textContent     = data.total_users || '—';
+      document.getElementById('db-types').textContent     = data.attack_types || '—';
+      document.getElementById('db-countries').textContent = data.countries || '—';
+      document.getElementById('db-range').textContent     = `${data.date_from} → ${data.date_to}`;
+      document.getElementById('db-path').textContent      = data.db_path || '—';
+    }
+
+    async function loadUsers() {
+      const res   = await fetch('/api/users');
+      const users = await res.json();
+      const tbody = document.getElementById('users-tbody');
+      const me    = '{{ user }}';
+      tbody.innerHTML = users.map(u => `
+        <tr>
+          <td style="color:var(--text-dim);font-family:monospace">${u.id}</td>
+          <td style="font-weight:600">${u.username} ${u.username===me?'<span style="font-size:9px;color:var(--accent);background:rgba(0,229,255,.1);padding:1px 5px;border-radius:3px">YOU</span>':''}</td>
+          <td><span class="badge ${u.role==='admin'?'badge-critical':u.role==='analyst'?'badge-medium':'badge-low'}">${u.role}</span></td>
+          <td style="color:var(--text-muted)">${u.created_at?.split('T')[0]||'—'}</td>
+          <td>${u.username!==me?`<button class="btn-del" onclick="deleteUser(${u.id},'${u.username}')">🗑 Delete</button>`:'<span style="color:var(--text-dim);font-size:11px">—</span>'}</td>
+        </tr>
+      `).join('');
+    }
+
+    async function addUser() {
+      const username = document.getElementById('new-username').value.trim();
+      const password = document.getElementById('new-password').value.trim();
+      const role     = document.getElementById('new-role').value;
+      if (!username || !password) { showToast('Username and password required', true); return; }
+      if (password.length < 6)    { showToast('Password must be at least 6 characters', true); return; }
+      const res  = await fetch('/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password, role })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(`✅ User '${username}' created successfully`);
+        document.getElementById('new-username').value = '';
+        document.getElementById('new-password').value = '';
+        loadUsers(); loadStats();
+      } else {
+        showToast(data.error || 'Failed to create user', true);
+      }
+    }
+
+    async function deleteUser(id, username) {
+      if (!confirm(`Delete user '${username}'? This cannot be undone.`)) return;
+      const res  = await fetch(`/api/users/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        showToast(`🗑 User '${username}' deleted`);
+        loadUsers(); loadStats();
+      } else {
+        showToast(data.error || 'Failed to delete user', true);
+      }
+    }
+
+    function showToast(msg, isError = false) {
+      const t = document.createElement('div');
+      t.className = 'toast' + (isError ? ' error' : '');
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 3500);
+    }
+
+    loadStats();
+    loadUsers();
+  </script>
+</body>
+</html>

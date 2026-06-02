@@ -1,0 +1,276 @@
+{
+  "total_threats": 2000,
+  "blocked_attacks": 1263,
+  "block_rate": 63.1,
+  "breach_count": 793,
+  "avg_duration_min": 366.7,
+  "attack_types": {
+    "Malware": 547,
+    "Phishing": 440,
+    "DDoS": 337,
+    "Ransomware": 287,
+    "SQL Injection": 171,
+    "Zero-Day Exploit": 117,
+    "Man-in-the-Middle": 101
+  },
+  "source_countries": {
+    "Russia": 454,
+    "China": 365,
+    "North Korea": 226,
+    "Iran": 199,
+    "Unknown": 176,
+    "United States": 170,
+    "Ukraine": 139,
+    "India": 98,
+    "Brazil": 92,
+    "Germany": 81
+  },
+  "target_countries": {
+    "Japan": 154,
+    "Spain": 144,
+    "Singapore": 142,
+    "France": 141,
+    "UAE": 140,
+    "United Kingdom": 135,
+    "Netherlands": 135,
+    "Canada": 131,
+    "Italy": 128,
+    "Australia": 128
+  },
+  "sectors": {
+    "Healthcare": 551,
+    "Finance": 430,
+    "Government": 372,
+    "Energy": 271,
+    "Education": 215,
+    "Retail": 161
+  },
+  "severity": {
+    "Critical": 282,
+    "High": 638,
+    "Medium": 708,
+    "Low": 372
+  },
+  "statuses": {
+    "Blocked": 1263,
+    "Mitigated": 426,
+    "Ongoing": 164,
+    "Resolved": 147
+  },
+  "monthly_trend": {
+    "2024-01": 171,
+    "2024-02": 164,
+    "2024-03": 159,
+    "2024-04": 156,
+    "2024-05": 181,
+    "2024-06": 161,
+    "2024-07": 180,
+    "2024-08": 159,
+    "2024-09": 164,
+    "2024-10": 184,
+    "2024-11": 148,
+    "2024-12": 173
+  },
+  "recent_incidents": [
+    {
+      "incident_id": "INC-01931",
+      "date": "2024-12-30",
+      "attack_type": "Malware",
+      "source_country": "Russia",
+      "target_country": "Canada",
+      "sector": "Government",
+      "severity": "Medium",
+      "status": "Blocked"
+    },
+    {
+      "incident_id": "INC-01883",
+      "date": "2024-12-30",
+      "attack_type": "Zero-Day Exploit",
+      "source_country": "China",
+      "target_country": "India",
+      "sector": "Government",
+      "severity": "Critical",
+      "status": "Resolved"
+    },
+    {
+      "incident_id": "INC-01402",
+      "date": "2024-12-30",
+      "attack_type": "Zero-Day Exploit",
+      "source_country": "North Korea",
+      "target_country": "Germany",
+      "sector": "Healthcare",
+      "severity": "Medium",
+      "status": "Blocked"
+    },
+    {
+      "incident_id": "INC-01219",
+      "date": "2024-12-30",
+      "attack_type": "Malware",
+      "source_country": "North Korea",
+      "target_country": "Brazil",
+      "sector": "Education",
+      "severity": "Medium",
+      "status": "Blocked"
+    },
+    {
+      "incident_id": "INC-01190",
+      "date": "2024-12-30",
+      "attack_type": "Malware",
+      "source_country": "Iran",
+      "target_country": "South Korea",
+      "sector": "Education",
+      "severity": "High",
+      "status": "Blocked"
+    },
+    {
+      "incident_id": "INC-01013",
+      "date": "2024-12-30",
+      "attack_type": "SQL Injection",
+      "source_country": "China",
+      "target_country": "India",
+      "sector": "Healthcare",
+      "severity": "High",
+      "status": "Blocked"
+    },
+    {
+      "incident_id": "INC-00764",
+      "date": "2024-12-30",
+      "attack_type": "Phishing",
+      "source_country": "Russia",
+      "target_country": "UAE",
+      "sector": "Healthcare",
+      "severity": "Low",
+      "status": "Blocked"
+    },
+    {
+      "incident_id": "INC-00587",
+      "date": "2024-12-30",
+      "attack_type": "Phishing",
+      "source_country": "Russia",
+      "target_country": "Australia",
+      "sector": "Education",
+      "severity": "Medium",
+      "status": "Blocked"
+    },
+    {
+      "incident_id": "INC-00322",
+      "date": "2024-12-30",
+      "attack_type": "Phishing",
+      "source_country": "India",
+      "target_country": "Germany",
+      "sector": "Energy",
+      "severity": "High",
+      "status": "Blocked"
+    },
+    {
+      "incident_id": "INC-01505",
+      "date": "2024-12-29",
+      "attack_type": "Malware",
+      "source_country": "India",
+      "target_country": "Australia",
+      "sector": "Energy",
+      "severity": "Low",
+      "status": "Blocked"
+    },
+    {
+      "incident_id": "INC-00550",
+      "date": "2024-12-29",
+      "attack_type": "Malware",
+      "source_country": "Russia",
+      "target_country": "United States",
+      "sector": "Retail",
+      "severity": "Medium",
+      "status": "Resolved"
+    },
+    {
+      "incident_id": "INC-01172",
+      "date": "2024-12-29",
+      "attack_type": "Malware",
+      "source_country": "China",
+      "target_country": "Netherlands",
+      "sector": "Finance",
+      "severity": "High",
+      "status": "Ongoing"
+    },
+    {
+      "incident_id": "INC-00907",
+      "date": "2024-12-29",
+      "attack_type": "Man-in-the-Middle",
+      "source_country": "Ukraine",
+      "target_country": "Japan",
+      "sector": "Government",
+      "severity": "Low",
+      "status": "Blocked"
+    },
+    {
+      "incident_id": "INC-01754",
+      "date": "2024-12-29",
+      "attack_type": "Malware",
+      "source_country": "Russia",
+      "target_country": "Japan",
+      "sector": "Education",
+      "severity": "Critical",
+      "status": "Resolved"
+    },
+    {
+      "incident_id": "INC-01963",
+      "date": "2024-12-29",
+      "attack_type": "Phishing",
+      "source_country": "Germany",
+      "target_country": "Japan",
+      "sector": "Retail",
+      "severity": "High",
+      "status": "Resolved"
+    },
+    {
+      "incident_id": "INC-01848",
+      "date": "2024-12-29",
+      "attack_type": "Malware",
+      "source_country": "Russia",
+      "target_country": "Netherlands",
+      "sector": "Government",
+      "severity": "High",
+      "status": "Blocked"
+    },
+    {
+      "incident_id": "INC-01878",
+      "date": "2024-12-28",
+      "attack_type": "Zero-Day Exploit",
+      "source_country": "Russia",
+      "target_country": "United Kingdom",
+      "sector": "Finance",
+      "severity": "Critical",
+      "status": "Mitigated"
+    },
+    {
+      "incident_id": "INC-01708",
+      "date": "2024-12-28",
+      "attack_type": "Zero-Day Exploit",
+      "source_country": "Russia",
+      "target_country": "South Korea",
+      "sector": "Finance",
+      "severity": "Medium",
+      "status": "Blocked"
+    },
+    {
+      "incident_id": "INC-01395",
+      "date": "2024-12-28",
+      "attack_type": "SQL Injection",
+      "source_country": "Unknown",
+      "target_country": "France",
+      "sector": "Retail",
+      "severity": "Critical",
+      "status": "Blocked"
+    },
+    {
+      "incident_id": "INC-01251",
+      "date": "2024-12-28",
+      "attack_type": "Phishing",
+      "source_country": "Iran",
+      "target_country": "UAE",
+      "sector": "Healthcare",
+      "severity": "Low",
+      "status": "Resolved"
+    }
+  ]
+}

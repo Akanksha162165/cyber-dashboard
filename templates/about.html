@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Cyber Threat Intelligence Dashboard</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    .about-wrap { max-width: 860px; margin: 40px auto; padding: 0 24px 60px; }
+    .about-hero {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--accent);
+      border-radius: 12px;
+      padding: 36px 40px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .about-hero h1 { font-size: 26px; color: var(--accent); margin-bottom: 10px; }
+    .about-hero p  { color: var(--text-muted); font-size: 14px; line-height: 1.8; }
+    .about-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px 28px;
+      margin-bottom: 16px;
+    }
+    .about-section h2 {
+      font-size: 14px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .tech-item {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .tech-name { font-weight: 700; color: var(--text-main); font-size: 13px; }
+    .tech-role { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+    .feature-list { list-style: none; }
+    .feature-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid #111d30;
+      font-size: 13px;
+      color: var(--text-main);
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .feature-list li:last-child { border: none; }
+    .feature-list li span { font-size: 15px; }
+    .api-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .api-table th {
+      background: var(--bg-input);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 1px;
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .api-table td { padding: 9px 12px; border-bottom: 1px solid #111d30; color: var(--text-main); }
+    .api-table td:first-child { font-family: monospace; color: var(--accent); font-size: 11px; }
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      border: 1px solid var(--border);
+      padding: 7px 14px;
+      border-radius: 6px;
+      transition: all .2s;
+    }
+    .back-btn:hover { color: var(--accent); border-color: var(--accent); }
+    @media(max-width:600px) { .tech-grid { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-left">
+      <span class="logo">🛡️ CTID</span>
+      <span class="logo-full">Cyber Threat Intelligence Dashboard</span>
+    </div>
+    <div class="header-right">
+      <span class="user-pill">👤 {{ user }} <span class="role-tag">{{ role }}</span></span>
+      <a href="/" class="btn-nav">Dashboard</a>
+      <a href="/logout" class="btn-logout">Logout</a>
+    </div>
+  </header>
+
+  <div class="about-wrap">
+    <a href="/" class="back-btn">← Back to Dashboard</a>
+
+    <div class="about-hero">
+      <h1>🛡️ Cyber Threat Intelligence Dashboard</h1>
+      <p>
+        A full-stack web application that collects, processes, and visualises cybersecurity
+        incident data to help analysts identify attack patterns, high-risk sectors, and
+        geographic threat origins — the same approach used by IBM X-Force, CISA, and
+        enterprise Security Operations Centers worldwide.
+      </p>
+    </div>
+
+    
+    <div class="about-section">
+      <h2>✨ Key Features</h2>
+      <ul class="feature-list">
+        <li><span>🔐</span> Role-based login system (Admin / Analyst / Guest) with Flask session management</li>
+        <li><span>📊</span> 6 interactive Chart.js visualisations — doughnut, line, and bar charts</li>
+        <li><span>🌍</span> World map showing attack origins and targets using bubble charts</li>
+        <li><span>🔍</span> Real-time filters by attack type, sector, severity, and country</li>
+        <li><span>📋</span> Paginated incident table with live search across 2,000 records</li>
+        <li><span>⬇️</span> CSV export of filtered data for offline analysis</li>
+        <li><span>🚨</span> Alert system showing active critical/high-severity ongoing incidents</li>
+        <li><span>🌙</span> Dark / Light mode toggle for accessibility</li>
+        <li><span>📱</span> Fully responsive — works on mobile, tablet, and desktop</li>
+        <li><span>⚡</span> REST API with 6 endpoints, supporting filters and pagination</li>
+      </ul>
+    </div>
+
+    
+    <div class="about-section">
+      <h2>🔧 Technology Stack</h2>
+      <div class="tech-grid">
+        <div class="tech-item">
+          <div class="tech-name">🐍 Python 3</div>
+          <div class="tech-role">Backend logic and data processing</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-name">🌐 Flask</div>
+          <div class="tech-role">Web framework and REST API</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-name">🐼 Pandas</div>
+          <div class="tech-role">CSV loading, cleaning, aggregation</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-name">📈 Chart.js</div>
+          <div class="tech-role">Interactive browser-side charts</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-name">🎨 HTML + CSS</div>
+          <div class="tech-role">Dark-themed responsive UI</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-name">⚙️ Vanilla JS</div>
+          <div class="tech-role">API calls, filters, DOM updates</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-name">🚀 Gunicorn</div>
+          <div class="tech-role">Production WSGI web server</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-name">☁️ Render.com</div>
+          <div class="tech-role">Free cloud deployment platform</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-name">🐙 GitHub</div>
+          <div class="tech-role">Version control and CI/CD</div>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="about-section">
+      <h2>📡 API Endpoints</h2>
+      <table class="api-table">
+        <thead>
+          <tr><th>Endpoint</th><th>Method</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>/api/data</td><td>GET</td><td>Chart data. Optional filters: attack_type, sector, severity, source_country</td></tr>
+          <tr><td>/api/incidents</td><td>GET</td><td>Paginated incident rows. Supports page, per_page, search</td></tr>
+          <tr><td>/api/filter-options</td><td>GET</td><td>Unique values for each filter dropdown</td></tr>
+          <tr><td>/api/alerts</td><td>GET</td><td>Recent Critical/High ongoing incidents</td></tr>
+          <tr><td>/api/map-data</td><td>GET</td><td>Per-country attack counts for map chart</td></tr>
+          <tr><td>/api/export/csv</td><td>GET</td><td>Download filtered data as CSV</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    
+    <div class="about-section">
+      <h2>☁️ Deployment Guide</h2>
+      <p style="font-size:13px;color:var(--text-muted);line-height:1.9">
+        <strong style="color:var(--text-main)">1. GitHub</strong> — Push all project files to a GitHub repository.<br>
+        <strong style="color:var(--text-main)">2. Render.com</strong> — Connect your repo. Set Build Command to:<br>
+        <code style="background:var(--bg-input);padding:3px 8px;border-radius:4px;font-size:11px">
+          pip install -r requirements.txt &amp;&amp; python scripts/generate_sample_data.py &amp;&amp; python scripts/clean_data.py
+        </code><br>
+        Set Start Command to: <code style="background:var(--bg-input);padding:3px 8px;border-radius:4px;font-size:11px">gunicorn app:app</code><br>
+        <strong style="color:var(--text-main)">3. Deploy</strong> — Click Deploy. Your live URL will be ready in ~2 minutes.
+      </p>
+    </div>
+
+  </div>
+  <footer class="footer">
+    Cyber Threat Intelligence Dashboard — Final Year Project &nbsp;|&nbsp;
+    Built with Python · Flask · Pandas · Chart.js
+  </footer>
+
+</body>
+</html>

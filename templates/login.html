@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Cyber Threat Intelligence Dashboard</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap');
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary:   #1d6fff;
+      --primary2:  #0a3dcc;
+      --accent:    #ffffff;
+      --highlight: #60a5fa;
+      --dark:      #000000;
+      --card:      #040d1e;
+      --card2:     #071433;
+      --border:    #0f2d6b;
+      --border2:   #1a4499;
+      --text:      #e8f0ff;
+      --muted:     #4a7acc;
+      --dim:       #1e3d7a;
+      --red:       #ef4444;
+    }
+
+    body {
+      background: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Rajdhani', sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.7;
+    }
+
+    .glow-blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .glow-blob-1 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(29,111,255,.18), transparent 70%);
+      top: -150px; left: -150px;
+      animation: blobFloat 9s ease-in-out infinite;
+    }
+    .glow-blob-2 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(10,61,204,.12), transparent 70%);
+      bottom: -200px; right: -200px;
+      animation: blobFloat 12s ease-in-out infinite reverse;
+    }
+    .glow-blob-3 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(96,165,250,.08), transparent 70%);
+      top: 40%; right: 10%;
+      animation: blobFloat 7s ease-in-out infinite 2s;
+    }
+    @keyframes blobFloat {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50%      { transform: translate(20px,15px) scale(1.06); }
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image: radial-gradient(rgba(29,111,255,.12) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+    }
+
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 3px,
+        rgba(29,111,255,.012) 3px, rgba(29,111,255,.012) 4px
+      );
+      pointer-events: none;
+    }
+
+    .login-wrap {
+      position: relative; z-index: 10;
+      width: 440px;
+      animation: cardReveal .9s cubic-bezier(.16,1,.3,1) both;
+    }
+    @keyframes cardReveal {
+      from { opacity: 0; transform: translateY(40px) scale(.96); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .card-border {
+      padding: 1.5px;
+      border-radius: 18px;
+      background: linear-gradient(135deg,
+        #1d6fff, #0a3dcc, #60a5fa, #ffffff33, #1d6fff);
+      background-size: 300% 300%;
+      animation: borderShift 5s linear infinite;
+      box-shadow:
+        0 0 60px rgba(29,111,255,.25),
+        0 0 120px rgba(29,111,255,.1),
+        0 40px 100px rgba(0,0,0,.9);
+    }
+    @keyframes borderShift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .login-box {
+      background: var(--card);
+      border-radius: 17px;
+      padding: 44px 40px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .login-box::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 280px; height: 180px;
+      background: radial-gradient(ellipse at top left,
+        rgba(29,111,255,.1) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .login-box::after {
+      content: '';
+      position: absolute; bottom: 0; right: 0;
+      width: 200px; height: 150px;
+      background: radial-gradient(ellipse at bottom right,
+        rgba(96,165,250,.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .logo-wrap {
+      text-align: center;
+      margin-bottom: 32px;
+      animation: fadeDown .7s .2s both;
+    }
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .shield-wrap {
+      display: inline-block;
+      margin-bottom: 16px;
+      position: relative;
+      width: 80px; height: 80px;
+    }
+    .shield-ring {
+      position: absolute;
+      top: 50%; left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(29,111,255,.25);
+    }
+    .shield-ring-1 {
+      width: 90px; height: 90px;
+      border-top-color: var(--primary);
+      animation: ringRotate 3s linear infinite;
+    }
+    .shield-ring-2 {
+      width: 110px; height: 110px;
+      border-bottom-color: var(--highlight);
+      animation: ringRotate 5s linear infinite reverse;
+    }
+    @keyframes ringRotate { to { transform: translate(-50%,-50%) rotate(360deg); } }
+
+    .shield-svg {
+      width: 64px; height: 64px;
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      filter: drop-shadow(0 0 14px rgba(29,111,255,.7));
+      animation: shieldPulse 3s ease-in-out infinite;
+    }
+    @keyframes shieldPulse {
+      0%,100% { filter: drop-shadow(0 0 14px rgba(29,111,255,.7)); }
+      50%      { filter: drop-shadow(0 0 28px rgba(96,165,250,.9)); }
+    }
+
+    
+    .logo-title {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 14px;
+      color: var(--accent);
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid var(--primary);
+      width: 0;
+      margin: 0 auto;
+      animation:
+        typing      2s   steps(28,end) 0.5s forwards,
+        blinkCursor 0.75s step-end    3,
+        hideCursor  0s               2.8s forwards;
+    }
+    @keyframes typing      { to { width: 100%; } }
+    @keyframes blinkCursor { 50% { border-color: transparent; } }
+    /* NEW: after typing finishes, cursor permanently disappears */
+    @keyframes hideCursor  { to  { border-right-color: transparent; } }
+
+    .logo-line {
+      width: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--primary), var(--highlight), transparent);
+      margin: 10px auto 8px;
+      animation: lineExpand .6s ease 2.5s forwards;
+      border-radius: 2px;
+    }
+    @keyframes lineExpand { to { width: 80%; } }
+
+    .logo-sub {
+      font-size: 10px; color: var(--muted);
+      letter-spacing: 2.5px; text-transform: uppercase;
+      font-family: 'Share Tech Mono', monospace;
+      opacity: 0;
+      animation: fadeIn .4s ease 2.8s forwards;
+    }
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    .field-group {
+      margin-top: 22px; opacity: 0;
+      animation: fadeIn .4s ease forwards;
+    }
+    .field-group:nth-child(3) { animation-delay: 2.9s; }
+    .field-group:nth-child(4) { animation-delay: 3.1s; }
+
+    label {
+      display: block; font-size: 10px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 2px;
+      margin-bottom: 8px;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .input-wrap { position: relative; }
+
+    .input-icon {
+      position: absolute; left: 13px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px; color: var(--dim);
+      pointer-events: none; transition: color .25s;
+    }
+    .input-wrap:focus-within .input-icon { color: var(--primary); }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      background: rgba(0,0,0,.6);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 13px 42px 13px 40px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      outline: none;
+      transition: border-color .25s, box-shadow .25s, background .25s;
+      letter-spacing: .5px;
+    }
+    input::placeholder { color: var(--dim); font-weight: 400; }
+    input:focus {
+      border-color: var(--primary);
+      background: rgba(29,111,255,.04);
+      box-shadow: 0 0 0 3px rgba(29,111,255,.15),
+                  inset 0 0 24px rgba(29,111,255,.04);
+    }
+
+    .focus-line {
+      height: 2px; width: 0;
+      background: linear-gradient(90deg, var(--primary), var(--highlight));
+      transition: width .35s cubic-bezier(.4,0,.2,1);
+      margin-top: -2px; border-radius: 0 0 6px 6px;
+    }
+    input:focus ~ .focus-line { width: 100%; }
+
+    .toggle-pw {
+      position: absolute; right: 12px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
+      color: var(--dim); cursor: pointer;
+      font-size: 15px; padding: 4px;
+      transition: color .2s; line-height: 1;
+    }
+    .toggle-pw:hover { color: var(--primary); }
+
+    .field-error {
+      font-size: 11px; color: var(--red);
+      margin-top: 6px; display: none;
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: .5px;
+    }
+    .field-error.show { display: block; animation: shake .3s ease; }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25%      { transform: translateX(-5px); }
+      75%      { transform: translateX(5px); }
+    }
+
+    .btn-wrap {
+      margin-top: 30px; opacity: 0;
+      animation: fadeIn .4s ease 3.3s forwards;
+    }
+
+    .btn-login {
+      width: 100%;
+      background: linear-gradient(90deg, var(--primary), #3b82f6, var(--highlight));
+      background-size: 200% 100%;
+      color: #ffffff; border: none;
+      padding: 15px; border-radius: 10px;
+      font-size: 12px; font-weight: 800;
+      font-family: 'Share Tech Mono', monospace;
+      cursor: pointer; letter-spacing: 3px;
+      text-transform: uppercase;
+      transition: background-position .4s, transform .15s, box-shadow .25s;
+      position: relative; overflow: hidden;
+      box-shadow: 0 4px 24px rgba(29,111,255,.35);
+    }
+    .btn-login::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg,
+        transparent 0%, rgba(255,255,255,.2) 50%, transparent 100%);
+      transform: translateX(-100%);
+      transition: transform .5s;
+    }
+    .btn-login:hover {
+      background-position: 100% 0;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 36px rgba(29,111,255,.55);
+    }
+    .btn-login:hover::before { transform: translateX(100%); }
+    .btn-login:active { transform: translateY(0); }
+    .btn-login.loading { pointer-events: none; opacity: .75; }
+    .btn-login .btn-spinner { display: none; }
+    .btn-login.loading .btn-text { opacity: 0; }
+    .btn-login.loading .btn-spinner {
+      display: inline-block;
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: 20px; height: 20px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+    }
+    @keyframes spin { to { transform: translate(-50%,-50%) rotate(360deg); } }
+
+    .error-box {
+      background: rgba(239,68,68,.07);
+      border: 1px solid rgba(239,68,68,.3);
+      border-left: 4px solid var(--red);
+      color: #fca5a5;
+      padding: 13px 16px; border-radius: 10px;
+      font-size: 13px; margin-top: 18px;
+      display: flex; align-items: flex-start;
+      gap: 10px; line-height: 1.5;
+      animation: errorAppear .3s ease, shake .4s ease;
+    }
+    @keyframes errorAppear { from{opacity:0} to{opacity:1} }
+    .error-icon { font-size: 15px; flex-shrink: 0; }
+
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 28px 0 16px; opacity: 0;
+      animation: fadeIn .4s ease 3.5s forwards;
+    }
+    .divider-line {
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border2), transparent);
+    }
+    .divider-text {
+      font-size: 9px; color: var(--muted);
+      letter-spacing: 2.5px; text-transform: uppercase;
+      font-family: 'Share Tech Mono', monospace; white-space: nowrap;
+    }
+
+    .demo-section { opacity: 0; animation: fadeIn .4s ease 3.7s forwards; }
+
+    .cred-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+
+    .cred-card {
+      background: rgba(29,111,255,.04);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 8px;
+      text-align: center; cursor: pointer;
+      transition: all .2s; position: relative; overflow: hidden;
+    }
+    .cred-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(29,111,255,.08) 0%, transparent 60%);
+      opacity: 0; transition: opacity .2s;
+    }
+    .cred-card:hover {
+      border-color: var(--primary);
+      background: rgba(29,111,255,.09);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(29,111,255,.2);
+    }
+    .cred-card:hover::before { opacity: 1; }
+    .cred-card:active { transform: translateY(0); }
+    .cred-role {
+      font-size: 9px; color: var(--highlight);
+      text-transform: uppercase; letter-spacing: 1.5px;
+      font-family: 'Share Tech Mono', monospace; margin-bottom: 5px;
+    }
+    .cred-user { font-size: 13px; color: var(--accent); font-weight: 700; letter-spacing: .5px; }
+    .cred-pass { font-size: 11px; color: var(--muted); margin-top: 3px; font-family: 'Share Tech Mono', monospace; }
+    .cred-hint {
+      font-size: 9px; color: var(--primary); margin-top: 5px;
+      opacity: 0; transition: opacity .2s;
+      font-family: 'Share Tech Mono', monospace;
+    }
+    .cred-card:hover .cred-hint { opacity: 1; }
+
+    .login-footer {
+      margin-top: 28px; padding-top: 16px;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 9px; font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 1px; opacity: 0;
+      animation: fadeIn .4s ease 3.9s forwards;
+    }
+    .footer-warn { color: rgba(239,68,68,.5); }
+    .footer-ver  { color: var(--dim); }
+    .footer-status { display: flex; align-items: center; gap: 5px; color: #22c55e; }
+    .status-dot {
+      width: 6px; height: 6px; background: #22c55e;
+      border-radius: 50%; animation: blink 2s ease-in-out infinite;
+      box-shadow: 0 0 6px #22c55e;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+  </style>
+</head>
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+  <div class="glow-blob glow-blob-1"></div>
+  <div class="glow-blob glow-blob-2"></div>
+  <div class="glow-blob glow-blob-3"></div>
+
+  <div class="login-wrap">
+    <div class="card-border">
+      <div class="login-box">
+
+        
+        <div class="logo-wrap">
+          <div class="shield-wrap">
+            <div class="shield-ring shield-ring-1"></div>
+            <div class="shield-ring shield-ring-2"></div>
+            <svg class="shield-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="blueGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%"   stop-color="#1d6fff"/>
+                  <stop offset="100%" stop-color="#60a5fa"/>
+                </linearGradient>
+                <linearGradient id="whiteGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%"   stop-color="#ffffff"/>
+                  <stop offset="100%" stop-color="#93c5fd"/>
+                </linearGradient>
+              </defs>
+              <path d="M32 4L8 14v18c0 13 10.5 24 24 28 13.5-4 24-15 24-28V14L32 4z"
+                    fill="url(#blueGrad)" opacity=".2"
+                    stroke="url(#blueGrad)" stroke-width="1.5"/>
+              <path d="M32 10L14 18v14c0 9.5 7.5 17.5 18 21 10.5-3.5 18-11.5 18-21V18L32 10z"
+                    fill="none" stroke="url(#whiteGrad)" stroke-width="1" opacity=".4"/>
+              <rect x="24" y="29" width="16" height="13" rx="2.5"
+                    fill="url(#blueGrad)" opacity=".9"/>
+              <path d="M26 29v-4a6 6 0 0112 0v4"
+                    stroke="url(#whiteGrad)" stroke-width="2.5"
+                    stroke-linecap="round" fill="none"/>
+              <circle cx="32" cy="35" r="2" fill="#040d1e"/>
+              <rect x="31" y="35" width="2" height="4" rx="1" fill="#040d1e"/>
+            </svg>
+          </div>
+
+          <div class="logo-title">Cyber Threat Intelligence</div>
+          <div class="logo-line"></div>
+          <div class="logo-sub">Authorized Personnel Only</div>
+        </div>
+
+        
+        <form method="POST" action="/login" id="login-form" novalidate>
+
+          <div class="field-group">
+            <label for="username">⌨ Username</label>
+            <div class="input-wrap">
+              <span class="input-icon">👤</span>
+              <input type="text" id="username" name="username"
+                     placeholder="Enter your username"
+                     autocomplete="username" required>
+              <div class="focus-line"></div>
+            </div>
+            <div class="field-error" id="err-user">⚠ Username cannot be empty</div>
+          </div>
+
+          <div class="field-group">
+            <label for="password">🔑 Password</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="password" name="password"
+                     placeholder="Enter your password"
+                     autocomplete="current-password" required>
+              <button type="button" class="toggle-pw" id="toggle-pw"
+                      onclick="togglePassword()" title="Show/hide password">👁</button>
+              <div class="focus-line"></div>
+            </div>
+            <div class="field-error" id="err-pass">⚠ Password cannot be empty</div>
+          </div>
+
+          <div class="btn-wrap">
+            <button type="submit" class="btn-login" id="btn-login">
+              <span class="btn-text">🔐 &nbsp; Access Dashboard</span>
+              <span class="btn-spinner"></span>
+            </button>
+          </div>
+
+        </form>
+
+        
+        {% if error %}
+          <div class="error-box">
+            <span class="error-icon">🚫</span>
+            <span>{{ error }}</span>
+          </div>
+        {% endif %}
+
+        
+        
+
+  <script>
+    
+    const canvas = document.getElementById('bg-canvas');
+    const ctx    = canvas.getContext('2d');
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const particles = Array.from({ length: 80 }, () => ({
+      x:     Math.random() * canvas.width,
+      y:     Math.random() * canvas.height,
+      r:     Math.random() * 1.5 + 0.3,
+      vx:    (Math.random() - 0.5) * 0.3,
+      vy:    (Math.random() - 0.5) * 0.3,
+      alpha: Math.random() * 0.5 + 0.1,
+    }));
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx   = particles[i].x - particles[j].x;
+          const dy   = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(29,111,255,${0.08*(1-dist/120)})`;
+            ctx.lineWidth   = 0.5;
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(96,165,250,${p.alpha})`;
+        ctx.fill();
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width)  p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+      });
+      requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+
+    
+    function togglePassword() {
+      const inp = document.getElementById('password');
+      const btn = document.getElementById('toggle-pw');
+      if (inp.type === 'password') {
+        inp.type = 'text';
+        btn.textContent = '🙈';
+      } else {
+        inp.type = 'password';
+        btn.textContent = '👁';
+      }
+    }
+
+    
+    function autofill(user, pass) {
+      const uEl = document.getElementById('username');
+      const pEl = document.getElementById('password');
+      uEl.value = ''; pEl.value = '';
+      let i = 0;
+      const iv = setInterval(() => {
+        if (i < user.length)                    { uEl.value += user[i]; }
+        else if (i < user.length + pass.length) { pEl.value += pass[i - user.length]; }
+        else { clearInterval(iv); }
+        i++;
+      }, 40);
+    }
+
+    
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+      const errU = document.getElementById('err-user');
+      const errP = document.getElementById('err-pass');
+      let valid  = true;
+      errU.classList.remove('show');
+      errP.classList.remove('show');
+      if (!user) { errU.classList.add('show'); valid = false; }
+      if (!pass) { errP.classList.add('show'); valid = false; }
+      if (!valid) { e.preventDefault(); return; }
+      document.getElementById('btn-login').classList.add('loading');
+    });
+
+    
+    setTimeout(() => document.getElementById('username').focus(), 2800);
+  </script>
+</body>
+</html>
