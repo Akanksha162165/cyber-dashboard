@@ -16,6 +16,16 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
+def migrate_db():
+    with get_db() as conn:
+        try:
+            conn.execute("ALTER TABLE users ADD COLUMN last_login TEXT")
+            conn.commit()
+        except Exception:
+            pass  
+
+migrate_db()
+
 def init_default_users():
     with get_db() as conn:
         count = conn.execute("SELECT COUNT(*) FROM users").fetchone()[0]
