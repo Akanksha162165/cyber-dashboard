@@ -92,6 +92,12 @@ def login():
         if user and check_password_hash(user["password_hash"], password):
             session["user"] = username
             session["role"] = user["role"]
+            with get_db() as conn:
+                conn.execute(
+                    "UPDATE users SET last_login = datetime('now') WHERE username = ?",
+                    (username,)
+                )
+                conn.commit()
             return redirect(url_for("index"))
         error = "Invalid username or password. Please try again."
     return render_template("login.html", error=error)
@@ -373,7 +379,7 @@ def export_csv():
 def get_users():
     with get_db() as conn:
         rows = conn.execute(
-            "SELECT id, username, role, created_at FROM users ORDER BY id"
+            "SELECT id, username, role, created_at, last_login FROM users ORDER BY id"
         ).fetchall()
     return jsonify([dict(r) for r in rows])
 
