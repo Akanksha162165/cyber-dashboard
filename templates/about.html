@@ -112,13 +112,12 @@
       </p>
     </div>
 
-    
     <div class="about-section">
       <h2>✨ Key Features</h2>
       <ul class="feature-list">
         <li><span>🔐</span> Role-based login system (Admin / Analyst / Guest) with Flask session management</li>
         <li><span>📊</span> 6 interactive Chart.js visualisations — doughnut, line, and bar charts</li>
-        <li><span>🌍</span> World map showing attack origins and targets using bubble charts</li>
+        <li><span>🌍</span> Interactive Leaflet.js world map showing attack origins and targets with zoomable bubbles</li>
         <li><span>🔍</span> Real-time filters by attack type, sector, severity, and country</li>
         <li><span>📋</span> Paginated incident table with live search across 2,000 records</li>
         <li><span>⬇️</span> CSV export of filtered data for offline analysis</li>
@@ -129,7 +128,6 @@
       </ul>
     </div>
 
-    
     <div class="about-section">
       <h2>🔧 Technology Stack</h2>
       <div class="tech-grid">
@@ -142,12 +140,16 @@
           <div class="tech-role">Web framework and REST API</div>
         </div>
         <div class="tech-item">
-          <div class="tech-name">🐼 Pandas</div>
-          <div class="tech-role">CSV loading, cleaning, aggregation</div>
+          <div class="tech-name">🗄️ SQLite</div>
+          <div class="tech-role">Lightweight relational database</div>
         </div>
         <div class="tech-item">
           <div class="tech-name">📈 Chart.js</div>
           <div class="tech-role">Interactive browser-side charts</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-name">🗺️ Leaflet.js</div>
+          <div class="tech-role">Interactive world map visualisation</div>
         </div>
         <div class="tech-item">
           <div class="tech-name">🎨 HTML + CSS</div>
@@ -172,7 +174,6 @@
       </div>
     </div>
 
-    
     <div class="about-section">
       <h2>📡 API Endpoints</h2>
       <table class="api-table">
@@ -184,13 +185,12 @@
           <tr><td>/api/incidents</td><td>GET</td><td>Paginated incident rows. Supports page, per_page, search</td></tr>
           <tr><td>/api/filter-options</td><td>GET</td><td>Unique values for each filter dropdown</td></tr>
           <tr><td>/api/alerts</td><td>GET</td><td>Recent Critical/High ongoing incidents</td></tr>
-          <tr><td>/api/map-data</td><td>GET</td><td>Per-country attack counts for map chart</td></tr>
+          <tr><td>/api/map-data</td><td>GET</td><td>Per-country attack counts for Leaflet.js map</td></tr>
           <tr><td>/api/export/csv</td><td>GET</td><td>Download filtered data as CSV</td></tr>
         </tbody>
       </table>
     </div>
 
-    
     <div class="about-section">
       <h2>☁️ Deployment Guide</h2>
       <p style="font-size:13px;color:var(--text-muted);line-height:1.9">
@@ -205,9 +205,10 @@
     </div>
 
   </div>
+
   <footer class="footer">
     Cyber Threat Intelligence Dashboard — Final Year Project &nbsp;|&nbsp;
-    Built with Python · Flask · Pandas · Chart.js
+    Built with Python · Flask · SQLite · Chart.js · Leaflet.js
   </footer>
 
 </body>
