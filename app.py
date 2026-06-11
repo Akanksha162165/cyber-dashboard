@@ -368,7 +368,6 @@ def export_csv():
                     headers={"Content-Disposition": "attachment; filename=cyber_incidents_export.csv"})
 
 
-
 @app.route("/api/users", methods=["GET"])
 @admin_required
 def get_users():
@@ -447,7 +446,7 @@ def db_stats():
         "date_to":         date_range[1],
         "attack_types":    attack_types,
         "countries":       countries,
-        "db_path":         DB_PATH,
+        "db_path":         "secured",   # ← hidden for security
     })
 
 if __name__ == "__main__":
